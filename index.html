@@ -109,7 +109,7 @@ function home(){
  const ms=mStart(),sm=t=>S.tx.filter(x=>x.t===t&&x.ts>=ms).reduce((r,x)=>r+x.m,0),tot=S.acc.reduce((r,a)=>r+bal(a),0),tn=i=>`style="background:${COL[i%8]}22"`;
  $('#v').innerHTML=`<div class="hero"><small>Всего на счетах</small><b>${f(tot)}</b><div><span class="p">+${f(sm('inc'))}</span><span class="m">−${f(sm('exp'))}</span><i>за месяц</i></div></div>
  <h2>Доходы</h2><div class="card grid">${S.inc.map((c,i)=>`<div class="it" data-cat="${c.id}" data-t="inc"><div class="ci" ${tn(i)}>${c.i}</div><b>${esc(c.n)}</b></div>`).join('')}</div>
- <h2>Счета — перетащите на категорию</h2><div class="card row">${S.acc.map(a=>`<div class="it"><div class="ci w" data-acc="${a.id}">${a.i}</div><b>${esc(a.n)}</b><small>${f(bal(a))}</small></div>`).join('')}</div>
+ <h2>Счета</h2><div class="card row">${S.acc.map(a=>`<div class="it"><div class="ci w" data-acc="${a.id}">${a.i}</div><b>${esc(a.n)}</b><small>${f(bal(a))}</small></div>`).join('')}</div>
  <h2>Расходы</h2><div class="card grid">${S.exp.map((c,i)=>`<div class="it" data-cat="${c.id}" data-t="exp"><div class="ci" ${tn(i+3)}>${c.i}</div><b>${esc(c.n)}</b><small>${f(spent(c.id))}</small></div>`).join('')}</div>`;
  document.querySelectorAll('[data-cat]').forEach(e=>e.onclick=()=>{if(e.dataset.dragged==='1'){e.dataset.dragged='0';return}openSheet(e.dataset.t,S.acc[0].id,e.dataset.cat)});
  document.querySelectorAll('.w').forEach(drag);
