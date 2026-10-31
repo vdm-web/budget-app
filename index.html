@@ -170,11 +170,19 @@ main{padding-left:26px;padding-right:26px}
 .row{gap:2px}
 .rw .ci{width:40px;height:40px;font-size:19px}
 .sw{background:transparent}.sw.sp{background:var(--red)}.sw .d{display:none}.sw.sp .d{display:flex}.rw{background:#fff}
+.periodbar.home-periodbar{width:100%;margin:12px 0 4px;padding:0 14px}
+header.abs{display:none}.periodbar.home-periodbar{padding:0 22px;margin-top:12px}
+.periodbar.home-periodbar{justify-content:center}.periodbar.home-periodbar strong{flex:1;text-align:center}
+.periodbar:not(.home-periodbar){flex-wrap:wrap;justify-content:center;gap:10px 18px;margin:12px 0 8px}
+.periodbar:not(.home-periodbar) button{width:34px;height:34px;padding:0 0 2px;border-radius:50%;background:rgba(255,255,255,.9);box-shadow:0 4px 12px -4px rgba(30,40,110,.3);font-size:22px}
+.periodbar:not(.home-periodbar) strong{font-size:17px;font-weight:700;min-width:120px;text-align:center}
+.periodbar:not(.home-periodbar) select{flex:0 0 100%;max-width:190px;margin:0 auto;text-align:center;text-align-last:center;background:rgba(255,255,255,.9);box-shadow:0 4px 12px -6px rgba(30,40,110,.3);font-weight:600}
+header{padding-left:26px;padding-right:26px}
 </style></head><body>
 <div id="app">
-<header><h1 id="ttl">Главная</h1><button class="gear" id="gear" aria-label="Настройки">⚙︎</button></header>
+<header><h1 id="ttl">Главная</h1></header>
 <main id="v"></main>
-<nav><button data-t="home" class="on"><span><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg></span>Главная</button><button data-t="hist"><span><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>История</button><button data-t="stat"><span><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20v-8M12 20V5M19 20v-5"/></svg></span>Аналитика</button></nav>
+<nav><button data-t="home" class="on"><span><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg></span>Главная</button><button data-t="hist"><span><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>История</button><button data-t="stat"><span><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20v-8M12 20V5M19 20v-5"/></svg></span>Аналитика</button><button id="gear" data-t="set" aria-label="Настройки"><span><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>Настройки</button></nav>
 </div>
 <div class="ov" id="ov"><div class="sh" id="sh"></div></div>
 <div class="toast" id="toast"></div>
@@ -210,9 +218,9 @@ function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setT
 function persist(){localStorage.setItem(K,JSON.stringify(S))}
 function save(){persist();render()}
 /* ---------- render ---------- */
-function render(){document.querySelector('header').classList.toggle('abs',tab==='home');$('#ttl').textContent={home:'',hist:'История',stat:'Аналитика'}[tab];
+function render(){document.querySelector('header').classList.toggle('abs',tab==='home');$('#ttl').textContent={home:'',hist:'История',stat:'Аналитика',set:'Настройки'}[tab];
  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
- ({home,hist,stat})[tab]();}
+ ({home,hist,stat,set:setg})[tab]();}
 function home(){
  const {start:ms,end:me}=monthBounds(homeMonth),sm=t=>S.tx.filter(x=>x.t===t&&x.ts>=ms&&x.ts<me).reduce((r,x)=>r+x.m,0),tot=S.acc.reduce((r,a)=>r+bal(a),0),tn=i=>`style="background:${COL[i%8]}33"`;
  $('#v').innerHTML=` <div class="periodbar home-periodbar"><button id="hmPrev" aria-label="Предыдущий месяц">‹</button><strong>${monthName(homeMonth)}</strong><button id="hmNext" aria-label="Следующий месяц">›</button></div>
@@ -278,24 +286,21 @@ function openSheet(t,a,c){sh={t,a,c,e:'',n:'',date:new Date(Date.now()-new Date(
  document.querySelectorAll('.pad button').forEach(b=>b.onclick=()=>{const k=b.dataset.k;sh.e=k==='⌫'?sh.e.slice(0,-1):sh.e+(k==='−'?'-':k);const v=ev(sh.e);$('#disp').innerHTML=(sh.e.replace(/-/g,'−')||'0')+(/[+\-×÷]/.test(sh.e.slice(1))&&!isNaN(v)?` <small>= ${v}</small>`:'')});
  $('#go').onclick=()=>{const v=ev(sh.e);if(!(v>0)){toast('Введите сумму');return}
   const parts=sh.date.split('-').map(Number),ts=new Date(parts[0],parts[1]-1,parts[2],12,0,0,0).getTime();S.tx.push({id:Date.now(),t:sh.t,a:sh.a,c:sh.c,m:v,n:sh.n.trim(),ts});closeOv();save();toast('Сохранено')}}
-$('#gear').onclick=()=>{
- openOv(`<h2 style="margin-top:0">Резервная копия</h2>
- <button class="btn" id="exp">Скачать данные (файл)</button><button class="btn g" id="imp">Загрузить данные из файла</button><input type="file" id="file" accept=".json,application/json" hidden><div class="st" id="stt"></div>
- ${sec('acc','Счета')}${sec('inc','Категории доходов')}${sec('exp','Категории расходов')}
- <button class="go" id="ok">Готово</button>`);status();
+function setg(){
+ $('#v').innerHTML=`<h2>Резервная копия</h2><div class="card" style="padding:14px"><button class="btn" id="exp">Скачать данные (файл)</button><button class="btn g" id="imp">Загрузить данные из файла</button><input type="file" id="file" accept=".json,application/json" hidden><div class="st" id="stt"></div></div>
+ ${sec('acc','Счета')}${sec('inc','Категории доходов')}${sec('exp','Категории расходов')}`;status();
  $('#exp').onclick=exportData;$('#imp').onclick=()=>$('#file').click();$('#file').onchange=importData;
  document.querySelectorAll('[data-e]').forEach(e=>e.onclick=()=>{const[t,i]=e.dataset.e.split(':');openEdit(t,i)});
- document.querySelectorAll('[data-add]').forEach(e=>e.onclick=()=>{openEdit(e.dataset.add)});
- $('#ok').onclick=()=>{closeOv();save()}};
+ document.querySelectorAll('[data-add]').forEach(e=>e.onclick=()=>{openEdit(e.dataset.add)})}
 const ICONS=['💵','💳','🏦','👛','💰','🪙','💼','💻','🎁','📈','🏠','🛒','🍎','🍽️','☕','🍺','🚌','🚗','⛽','🚕','✈️','🏨','🎬','🎮','🎵','📚','🎓','💊','🏥','🦷','👕','👟','💄','✂️','🧴','🐶','🧸','👶','📱','🔌','💡','🧾','🔧','🛠️','🏋️','⚽','🏖️','🎉','🌐','📦','❤️','⭐'];
 const NAMES={acc:'счёт',inc:'категория дохода',exp:'категория расхода'};
-function sec(t,h){return`<h2>${h}</h2>`+S[t].map(x=>`<div class="lim er" data-e="${t}:${x.id}"><span>${x.i} ${esc(x.n)}</span><span style="flex:none;color:var(--mut)">›</span></div>`).join('')+`<button class="btn g" data-add="${t}">+ Добавить</button>`}
+function sec(t,h){return`<h2>${h}</h2><div class="card" style="padding:12px 14px">`+S[t].map(x=>`<div class="lim er" data-e="${t}:${x.id}"><span>${x.i} ${esc(x.n)}</span><span style="flex:none;color:var(--mut)">›</span></div>`).join('')+`<button class="btn g" data-add="${t}">+ Добавить</button></div>`}
 function openEdit(t,id){const isNew=!id,o=isNew?{id:t+Date.now(),n:'',i:ICONS[0],b:0}:find(t,id);let ic=o.i;
  openOv(`<h2 style="margin-top:0">${isNew?'Новая':'Изменить'}: ${NAMES[t]}</h2><input class="inp" id="en" placeholder="Название" maxlength="20" value="${esc(o.n)}">
  ${t==='acc'?`<input class="inp" id="eb" type="number" inputmode="decimal" placeholder="Начальный остаток," value="${o.b||0}">`:''}
  <div class="icons">${ICONS.map(i=>`<button class="ic ${i===ic?'on':''}" data-i="${i}">${i}</button>`).join('')}</div>
  <button class="go" id="es">Сохранить</button>${isNew?'':'<button class="btn g" id="ed" style="color:var(--red)">Удалить</button>'}<button class="btn g" id="ec">Назад</button>`);
- const back=()=>$('#gear').onclick();
+ const back=()=>{closeOv();render()};
  document.querySelectorAll('.ic').forEach(b=>b.onclick=()=>{ic=b.dataset.i;document.querySelectorAll('.ic').forEach(x=>x.classList.toggle('on',x===b))});
  $('#ec').onclick=back;
  $('#es').onclick=()=>{const n=$('#en').value.trim();if(!n){toast('Введите название');return}
@@ -316,7 +321,7 @@ function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileRe
   S={...DEF,...d,cfg:S.cfg};persist();closeOv();render();toast('Данные загружены')}catch(x){toast('Не удалось прочитать файл')}};
  r.readAsText(f);e.target.value=''}
 /* ---------- init ---------- */
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();$('#v').scrollTop=0});
+document.querySelectorAll('nav button[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();$('#v').scrollTop=0});
 try{const m={name:'Бюджет',short_name:'Бюджет',display:'standalone',background_color:'#000000',theme_color:'#000000',start_url:location.pathname,lang:'ru'};
  const l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/manifest+json'}));document.head.appendChild(l)}catch(e){}
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
