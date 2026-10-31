@@ -179,6 +179,11 @@ header.abs{display:none}.periodbar.home-periodbar{padding:0 22px;margin-top:12px
 .periodbar:not(.home-periodbar) select{flex:0 0 100%;max-width:190px;margin:0 auto;text-align:center;text-align-last:center;background:rgba(255,255,255,.9);box-shadow:0 4px 12px -6px rgba(30,40,110,.3);font-weight:600}
 header{padding-left:26px;padding-right:26px}
 .ghost{position:fixed!important;z-index:50;pointer-events:none;transition:none}
+.amt.tr{color:var(--acc)}
+@keyframes wig{0%{transform:rotate(-1.8deg)}50%{transform:rotate(1.8deg)}100%{transform:rotate(-1.8deg)}}
+.it.wig{animation:wig .26s ease-in-out infinite}.it.wig:nth-child(even){animation-delay:-.13s}
+.it.lift{opacity:.3}.it.tg .ci{transform:scale(1.18);box-shadow:0 0 0 5px rgba(47,107,255,.3)}
+.rh{cursor:pointer}.rh em{font-style:normal;margin-left:8px;padding:3px 10px;border-radius:999px;background:var(--acc);color:#fff;font-size:11px;letter-spacing:.04em;text-transform:none}
 </style></head><body>
 <div id="app">
 <header><h1 id="ttl">Главная</h1></header>
@@ -194,7 +199,7 @@ inc:[{id:'i1',n:'Зарплата',i:'💼'},{id:'i2',n:'Фриланс',i:'💻
 exp:[{id:'e1',n:'Продукты',i:'🛒'},{id:'e2',n:'Кафе',i:'☕'},{id:'e3',n:'Транспорт',i:'🚌'},{id:'e4',n:'Жилье',i:'🏠'},{id:'e5',n:'Развлечения',i:'🎬'},{id:'e6',n:'Здоровье',i:'💊'},{id:'e7',n:'Одежда',i:'👕'},{id:'e8',n:'Прочее',i:'📦'}],
 tx:[],cfg:{last:null}};
 let S;try{S=JSON.parse(localStorage.getItem(K))||DEF}catch(e){S=DEF}
-let tab='home',sh=null;
+let tab='home',sh=null,reorder=null;
 let homeMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 let histMode='month',statMode='month',histMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1),statMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 const monthName=d=>d.toLocaleDateString('ru-RU',{month:'long',year:'numeric'}).replace(/\s?г\.?$/,'');
@@ -212,7 +217,7 @@ const periodBounds=(mode,d)=>{
 const periodLabel=mode=>({month:'Месяц','3m':'3 месяца','6m':'6 месяцев',year:'Этот год',all:'Всё время'}[mode]);
 const f=n=>Math.round(n).toLocaleString('ru-RU'),esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const find=(t,id)=>S[t].find(x=>x.id===id)||{n:'?',i:'•'};
-const bal=a=>S.tx.reduce((s,x)=>x.a!==a.id?s:s+(x.t==='inc'?x.m:-x.m),a.b||0);
+const bal=a=>S.tx.reduce((s,x)=>x.t==='trf'?s+(x.c===a.id?x.m:0)-(x.a===a.id?x.m:0):x.a!==a.id?s:s+(x.t==='inc'?x.m:-x.m),a.b||0);
 const mStart=()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),1).getTime()};
 const spent=cid=>S.tx.filter(x=>x.t==='exp'&&x.c===cid&&x.ts>=mStart()).reduce((s,x)=>s+x.m,0);
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200)}
@@ -225,30 +230,45 @@ function render(){document.querySelector('header').classList.toggle('abs',tab===
 function home(){
  const {start:ms,end:me}=monthBounds(homeMonth),sm=t=>S.tx.filter(x=>x.t===t&&x.ts>=ms&&x.ts<me).reduce((r,x)=>r+x.m,0),tot=S.acc.reduce((r,a)=>r+bal(a),0),tn=i=>`style="background:${COL[i%8]}33"`;
  $('#v').innerHTML=` <div class="periodbar home-periodbar"><button id="hmPrev" aria-label="Предыдущий месяц">‹</button><strong>${monthName(homeMonth)}</strong><button id="hmNext" aria-label="Следующий месяц">›</button></div>
- <h2 class="hh"><span>Доходы</span><span class="p">${f(sm('inc'))}</span></h2><div class="card grid">${S.inc.map((c,i)=>`<div class="it" data-cat="${c.id}" data-t="inc"><div class="ci" ${tn(i)}>${c.i}</div><b>${esc(c.n)}</b><small>${f(S.tx.filter(x=>x.t==='inc'&&x.c===c.id&&x.ts>=ms&&x.ts<me).reduce((r,x)=>r+x.m,0))}</small></div>`).join('')}</div>
- <h2 class="hh"><span>Счета</span><span class="g">${f(tot)}</span></h2><div class="card row">${S.acc.map(a=>`<div class="it"><div class="ci w" data-acc="${a.id}">${a.i}</div><b>${esc(a.n)}</b><small>${f(bal(a))}</small></div>`).join('')}</div>
- <h2 class="hh"><span>Расходы</span><span class="m">${f(sm('exp'))}</span></h2><div class="card grid">${S.exp.map((c,i)=>`<div class="it" data-cat="${c.id}" data-t="exp"><div class="ci" ${tn(i+3)}>${c.i}</div><b>${esc(c.n)}</b><small>${f(S.tx.filter(x=>x.t==='exp'&&x.c===c.id&&x.ts>=ms&&x.ts<me).reduce((r,x)=>r+x.m,0))}</small></div>`).join('')}</div>`;
+ <h2 class="hh"><span class="rh ${reorder==='inc'?'ron':''}" data-g="inc">Доходы${reorder==='inc'?' <em>Готово</em>':''}</span><span class="p">${f(sm('inc'))}</span></h2><div class="card grid" data-grp="inc">${S.inc.map((c,i)=>`<div class="it" data-cat="${c.id}" data-t="inc"><div class="ci" ${tn(i)}>${c.i}</div><b>${esc(c.n)}</b><small>${f(S.tx.filter(x=>x.t==='inc'&&x.c===c.id&&x.ts>=ms&&x.ts<me).reduce((r,x)=>r+x.m,0))}</small></div>`).join('')}</div>
+ <h2 class="hh"><span class="rh ${reorder==='acc'?'ron':''}" data-g="acc">Счета${reorder==='acc'?' <em>Готово</em>':''}</span><span class="g">${f(tot)}</span></h2><div class="card row" data-grp="acc">${S.acc.map(a=>`<div class="it"><div class="ci w" data-acc="${a.id}">${a.i}</div><b>${esc(a.n)}</b><small>${f(bal(a))}</small></div>`).join('')}</div>
+ <h2 class="hh"><span class="rh ${reorder==='exp'?'ron':''}" data-g="exp">Расходы${reorder==='exp'?' <em>Готово</em>':''}</span><span class="m">${f(sm('exp'))}</span></h2><div class="card grid" data-grp="exp">${S.exp.map((c,i)=>`<div class="it" data-cat="${c.id}" data-t="exp"><div class="ci" ${tn(i+3)}>${c.i}</div><b>${esc(c.n)}</b><small>${f(S.tx.filter(x=>x.t==='exp'&&x.c===c.id&&x.ts>=ms&&x.ts<me).reduce((r,x)=>r+x.m,0))}</small></div>`).join('')}</div>`;
  $('#hmPrev').onclick=()=>{homeMonth.setMonth(homeMonth.getMonth()-1);render()};
  $('#hmNext').onclick=()=>{homeMonth.setMonth(homeMonth.getMonth()+1);render()};
- document.querySelectorAll('[data-cat]').forEach(e=>e.onclick=()=>{if(Date.now()-dragEnd<500)return;openSheet(e.dataset.t,S.acc[0].id,e.dataset.cat)});
- document.querySelectorAll('.w').forEach(e=>drag(e,'acc'));document.querySelectorAll('[data-t="inc"] .ci').forEach(e=>drag(e,'inc'));}
+ document.querySelectorAll('[data-cat]').forEach(e=>{if(reorder===e.dataset.t)return;e.onclick=()=>{if(Date.now()-dragEnd<500)return;openSheet(e.dataset.t,S.acc[0].id,e.dataset.cat)}});
+ if(reorder!=='acc')document.querySelectorAll('.w').forEach(e=>drag(e,'acc'));
+ if(reorder!=='inc')document.querySelectorAll('[data-t="inc"] .ci').forEach(e=>drag(e,'inc'));
+ document.querySelectorAll('.rh').forEach(e=>e.onclick=()=>{reorder=reorder===e.dataset.g?null:e.dataset.g;render();if(reorder)toast('Перетащите иконку на место другой')});
+ if(reorder)wireReorder(reorder)}
+function wireReorder(g){
+ const arr=S[g],idOf=it=>it.dataset.cat||it.querySelector('[data-acc]').dataset.acc,sel=`[data-grp="${g}"] .it`;
+ document.querySelectorAll(sel).forEach(it=>{it.classList.add('wig');it.style.touchAction='none';
+  it.onpointerdown=e=>{const x0=e.clientX,y0=e.clientY;let gh=null,tg=null;it.setPointerCapture(e.pointerId);
+   it.onpointermove=m=>{if(!gh&&Math.hypot(m.clientX-x0,m.clientY-y0)>6){gh=it.querySelector('.ci').cloneNode(true);gh.classList.add('ghost');document.body.appendChild(gh);it.classList.add('lift');navigator.vibrate&&navigator.vibrate(10)}
+    if(!gh)return;gh.style.left=m.clientX+'px';gh.style.top=m.clientY+'px';
+    const t=document.elementFromPoint(m.clientX,m.clientY),n=t&&t.closest(sel),nn=n&&n!==it?n:null;
+    if(nn!==tg){tg&&tg.classList.remove('tg');tg=nn;tg&&tg.classList.add('tg')}};
+   it.onpointerup=it.onpointercancel=u=>{it.onpointermove=it.onpointerup=it.onpointercancel=null;
+    if(gh){gh.remove();it.classList.remove('lift');tg&&tg.classList.remove('tg');
+     if(tg&&u.type==='pointerup'){const a=arr.findIndex(x=>x.id===idOf(it)),b=arr.findIndex(x=>x.id===idOf(tg));if(a>-1&&b>-1){const[m]=arr.splice(a,1);arr.splice(b,0,m);save()}}}}}})}
 let dragEnd=0;
 function drag(el,kind){
  el.onpointerdown=e=>{const x0=e.clientX,y0=e.clientY;let g=null,hot=null;el.setPointerCapture(e.pointerId);
   el.onpointermove=m=>{if(!g&&Math.hypot(m.clientX-x0,m.clientY-y0)>8){g=el.cloneNode(true);g.className=kind==='inc'?'ci ghost':'ci w ghost';document.body.appendChild(g);navigator.vibrate&&navigator.vibrate(10)}
    if(!g)return;g.style.left=m.clientX+'px';g.style.top=m.clientY+'px';
-   const t=document.elementFromPoint(m.clientX,m.clientY),c=t&&t.closest('[data-cat]'),n=kind==='inc'?(t&&t.closest('[data-acc]')):(c&&c.querySelector('.ci'));
+   const t=document.elementFromPoint(m.clientX,m.clientY),c=t&&t.closest('[data-cat]'),w=t&&t.closest('[data-acc]'),n=kind==='inc'?w:(c?c.querySelector('.ci'):(w&&w!==el?w:null));
    if(n!==hot){hot&&hot.classList.remove('hot');hot=n;hot&&hot.classList.add('hot')}};
   el.onpointerup=el.onpointercancel=u=>{el.onpointermove=el.onpointerup=el.onpointercancel=null;
    if(g){dragEnd=Date.now();g.remove();hot&&hot.classList.remove('hot');
-    if(hot&&u.type==='pointerup'){if(kind==='inc')openSheet('inc',hot.dataset.acc,el.parentElement.dataset.cat);else{const c=hot.parentElement;openSheet(c.dataset.t,el.dataset.acc,c.dataset.cat)}}}}}}
+    if(hot&&u.type==='pointerup'){if(kind==='inc')openSheet('inc',hot.dataset.acc,el.parentElement.dataset.cat);else if(hot.dataset.acc)openSheet('trf',el.dataset.acc,hot.dataset.acc);else{const c=hot.parentElement;openSheet(c.dataset.t,el.dataset.acc,c.dataset.cat)}}}
+   else if(kind==='acc'&&u.type==='pointerup'){const o=S.acc.find(a=>a.id!==el.dataset.acc);if(o)openSheet('trf',el.dataset.acc,o.id);else toast('Нужно минимум два счёта')}}}}
 function hist(){
  const {start,end}=periodBounds(histMode,histMonth);
  const tx=S.tx.filter(x=>x.ts>=start&&x.ts<end);
  const selector=`<div class="periodbar">${histMode==='month'?`<button id="hpPrev">‹</button><strong>${monthName(histMonth)}</strong><button id="hpNext">›</button>`:`<strong>${periodLabel(histMode)}</strong>`}<select id="histMode">${[['month','По месяцам'],['3m','3 месяца'],['6m','6 месяцев'],['year','Этот год'],['all','Всё время']].map(([v,l])=>`<option value="${v}" ${histMode===v?'selected':''}>${l}</option>`).join('')}</select></div>`;
  if(!tx.length){$('#v').innerHTML=selector+'<div class="empty">За этот период операций нет.</div>';wireHistPeriod();return}
  const g={};tx.slice().sort((a,b)=>b.ts-a.ts).forEach(x=>{const k=new Date(x.ts).toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'long',year:'numeric'});(g[k]=g[k]||[]).push(x)});
- $('#v').innerHTML=selector+Object.entries(g).map(([k,l])=>`<div class="day">${k}</div>`+l.map(x=>{const c=find(x.t,x.c);return`<div class="sw" data-id="${x.id}"><div class="d">Удалить</div><div class="rw"><div class="ci">${c.i}</div><div class="t"><b>${esc(c.n)}</b><small>${esc(find('acc',x.a).n)}${x.n?' · '+esc(x.n):''}</small></div><div class="amt ${x.t==='inc'?'p':''}">${x.t==='inc'?'+':'−'}${f(x.m)}</div></div></div>`}).join('')).join('');
+ $('#v').innerHTML=selector+Object.entries(g).map(([k,l])=>`<div class="day">${k}</div>`+l.map(x=>{const c=x.t==='trf'?{i:'⇄',n:'Перевод'}:find(x.t,x.c),sub=esc(find('acc',x.a).n)+(x.t==='trf'?' → '+esc(find('acc',x.c).n):'');return`<div class="sw" data-id="${x.id}"><div class="d">Удалить</div><div class="rw"><div class="ci">${c.i}</div><div class="t"><b>${esc(c.n)}</b><small>${sub}${x.n?' · '+esc(x.n):''}</small></div><div class="amt ${x.t==='inc'?'p':x.t==='trf'?'tr':''}">${x.t==='trf'?'':x.t==='inc'?'+':'−'}${f(x.m)}</div></div></div>`}).join('')).join('');
  wireHistPeriod();document.querySelectorAll('.sw').forEach(swipe);}
 function wireHistPeriod(){
  const sel=$('#histMode');if(sel)sel.onchange=()=>{histMode=sel.value;render()};
@@ -276,16 +296,18 @@ function openOv(h){$('#sh').innerHTML='<div class="grab"></div>'+h;$('#ov').clas
 function closeOv(){$('#ov').classList.remove('on');sh=null}
 $('#ov').onclick=e=>{if(e.target.id==='ov')closeOv()};
 function ev(s){if(!/^[\d.+\-×÷ ]+$/.test(s))return NaN;try{return Math.round(Function('return '+s.replace(/×/g,'*').replace(/÷/g,'/'))()*100)/100}catch(e){return NaN}}
-function openSheet(t,a,c){sh={t,a,c,e:'',n:'',date:new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10)};const cat=find(t,c);
- openOv(`<div class="chips" id="chips">${S.acc.map(x=>`<button class="chip ${x.id===a?'on':''}" data-a="${x.id}">${x.i} ${esc(x.n)}</button>`).join('')}</div>
- <div class="st" style="margin:0">${t==='exp'?'Расход':'Доход'}: ${cat.i} ${esc(cat.n)}</div><div class="disp" id="disp">0</div>
+function openSheet(t,a,c){sh={t,a,c,e:'',n:'',date:new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10)};const cat=t==='trf'?find('acc',c):find(t,c),chp=id=>S.acc.map(x=>`<button class="chip ${x.id===id?'on':''}" data-a="${x.id}">${x.i} ${esc(x.n)}</button>`).join('');
+ openOv(`${t==='trf'?'<div class="st" style="margin:0 0 6px">Откуда</div>':''}<div class="chips" id="chips">${chp(a)}</div>${t==='trf'?'<div class="st" style="margin:0 0 6px">Куда</div><div class="chips" id="chips2">'+chp(c)+'</div>':''}
+ <div class="st" style="margin:0">${t==='trf'?'Перевод между счетами':(t==='exp'?'Расход':'Доход')+': '+cat.i+' '+esc(cat.n)}</div><div class="disp" id="disp">0</div>
  <label class="date-label" for="txDate">Дата операции</label><input class="date-input" id="txDate" type="date" value="${sh.date}"><input class="note" id="note" placeholder="Комментарий (необязательно)" maxlength="80">
  <div class="pad">${['7','8','9','÷','4','5','6','×','1','2','3','−','.','0','⌫','+'].map(k=>`<button class="${'÷×−+'.includes(k)?'o':''}" data-k="${k}">${k}</button>`).join('')}</div>
  <button class="go" id="go">Готово</button>`);
- $('#chips').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;sh.a=b.dataset.a;document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b))};
+ $('#chips').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;sh.a=b.dataset.a;$('#chips').querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b))};
+ if($('#chips2'))$('#chips2').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;sh.c=b.dataset.a;$('#chips2').querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b))};
  $('#note').oninput=e=>sh.n=e.target.value;$('#txDate').onchange=e=>sh.date=e.target.value;
  document.querySelectorAll('.pad button').forEach(b=>b.onclick=()=>{const k=b.dataset.k;sh.e=k==='⌫'?sh.e.slice(0,-1):sh.e+(k==='−'?'-':k);const v=ev(sh.e);$('#disp').innerHTML=(sh.e.replace(/-/g,'−')||'0')+(/[+\-×÷]/.test(sh.e.slice(1))&&!isNaN(v)?` <small>= ${v}</small>`:'')});
  $('#go').onclick=()=>{const v=ev(sh.e);if(!(v>0)){toast('Введите сумму');return}
+  if(sh.t==='trf'&&sh.a===sh.c){toast('Выберите разные счета');return}
   const parts=sh.date.split('-').map(Number),ts=new Date(parts[0],parts[1]-1,parts[2],12,0,0,0).getTime();S.tx.push({id:Date.now(),t:sh.t,a:sh.a,c:sh.c,m:v,n:sh.n.trim(),ts});closeOv();save();toast('Сохранено')}}
 function setg(){
  $('#v').innerHTML=`<h2>Резервная копия</h2><div class="card" style="padding:14px"><button class="btn" id="exp">Скачать данные (файл)</button><button class="btn g" id="imp">Загрузить данные из файла</button><input type="file" id="file" accept=".json,application/json" hidden><div class="st" id="stt"></div></div>
@@ -308,9 +330,9 @@ function openEdit(t,id){const isNew=!id,o=isNew?{id:t+Date.now(),n:'',i:ICONS[0]
   const v={id:o.id,n,i:ic};if(t==='acc')v.b=+$('#eb').value||0;if(t==='exp'&&o.l)v.l=o.l;
   if(isNew)S[t].push(v);else Object.assign(o,v);save();back()};
  if(!isNew)$('#ed').onclick=()=>{if(t==='acc'&&S.acc.length<2){toast('Нужен хотя бы один счёт');return}
-  const k=S.tx.filter(x=>t==='acc'?x.a===id:x.t===t&&x.c===id).length;
+  const k=S.tx.filter(x=>t==='acc'?(x.a===id||(x.t==='trf'&&x.c===id)):x.t===t&&x.c===id).length;
   if(!confirm(`Удалить «${o.n}»${k?` вместе с операциями (${k})`:''}?`))return;
-  S[t]=S[t].filter(x=>x.id!==id);S.tx=S.tx.filter(x=>!(t==='acc'?x.a===id:x.t===t&&x.c===id));save();back()}}
+  S[t]=S[t].filter(x=>x.id!==id);S.tx=S.tx.filter(x=>!(t==='acc'?(x.a===id||(x.t==='trf'&&x.c===id)):x.t===t&&x.c===id));save();back()}}
 function status(){const e=$('#stt');if(e)e.textContent=S.cfg.last?'Последняя копия: '+new Date(S.cfg.last).toLocaleString('ru-RU'):'Копий ещё не было'}
 async function exportData(){const {cfg,...d}=S,blob=new Blob([JSON.stringify(d,null,1)],{type:'application/json'}),name='budget_'+new Date().toISOString().slice(0,10)+'.json';
  try{const file=new File([blob],name,{type:'application/json'});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});done();return}}catch(e){if(e.name==='AbortError')return}
@@ -322,7 +344,7 @@ function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileRe
   S={...DEF,...d,cfg:S.cfg};persist();closeOv();render();toast('Данные загружены')}catch(x){toast('Не удалось прочитать файл')}};
  r.readAsText(f);e.target.value=''}
 /* ---------- init ---------- */
-document.querySelectorAll('nav button[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();$('#v').scrollTop=0});
+document.querySelectorAll('nav button[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;reorder=null;render();$('#v').scrollTop=0});
 try{const m={name:'Бюджет',short_name:'Бюджет',display:'standalone',background_color:'#000000',theme_color:'#000000',start_url:location.pathname,lang:'ru'};
  const l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/manifest+json'}));document.head.appendChild(l)}catch(e){}
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
