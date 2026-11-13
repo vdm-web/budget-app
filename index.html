@@ -184,6 +184,8 @@ header{padding-left:26px;padding-right:26px}
 .it.wig{animation:wig .26s ease-in-out infinite}.it.wig:nth-child(even){animation-delay:-.13s}
 .it.lift{opacity:.3}.it.tg .ci{transform:scale(1.18);box-shadow:0 0 0 5px rgba(47,107,255,.3)}
 .rh{cursor:pointer}.rh em{font-style:normal;margin-left:8px;padding:3px 10px;border-radius:999px;background:var(--acc);color:#fff;font-size:11px;letter-spacing:.04em;text-transform:none}
+.rw{cursor:pointer}.rw:active{background:#f4f5fb}
+*{touch-action:manipulation;-webkit-touch-callout:none}.pad,.pad button{touch-action:none}
 </style></head><body>
 <div id="app">
 <header><h1 id="ttl">Главная</h1></header>
@@ -265,7 +267,7 @@ function drag(el,kind){
 function hist(){
  const {start,end}=periodBounds(histMode,histMonth);
  const tx=S.tx.filter(x=>x.ts>=start&&x.ts<end);
- const selector=`<div class="periodbar">${histMode==='month'?`<button id="hpPrev">‹</button><strong>${monthName(histMonth)}</strong><button id="hpNext">›</button>`:`<strong>${periodLabel(histMode)}</strong>`}<select id="histMode">${[['month','По месяцам'],['3m','3 месяца'],['6m','6 месяцев'],['year','Этот год'],['all','Всё время']].map(([v,l])=>`<option value="${v}" ${histMode===v?'selected':''}>${l}</option>`).join('')}</select></div>`;
+ const selector=`<div class="periodbar">${histMode==='month'?`<button id="hpPrev">‹</button><strong>${monthName(histMonth)}</strong><button id="hpNext">›</button>`:`<strong>${periodLabel(histMode)}</strong>`}</div>`;
  if(!tx.length){$('#v').innerHTML=selector+'<div class="empty">За этот период операций нет.</div>';wireHistPeriod();return}
  const g={};tx.slice().sort((a,b)=>b.ts-a.ts).forEach(x=>{const k=new Date(x.ts).toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'long',year:'numeric'});(g[k]=g[k]||[]).push(x)});
  $('#v').innerHTML=selector+Object.entries(g).map(([k,l])=>`<div class="day">${k}</div>`+l.map(x=>{const c=x.t==='trf'?{i:'⇄',n:'Перевод'}:find(x.t,x.c),sub=esc(find('acc',x.a).n)+(x.t==='trf'?' → '+esc(find('acc',x.c).n):'');return`<div class="sw" data-id="${x.id}"><div class="d">Удалить</div><div class="rw"><div class="ci">${c.i}</div><div class="t"><b>${esc(c.n)}</b><small>${sub}${x.n?' · '+esc(x.n):''}</small></div><div class="amt ${x.t==='inc'?'p':x.t==='trf'?'tr':''}">${x.t==='trf'?'':x.t==='inc'?'+':'−'}${f(x.m)}</div></div></div>`}).join('')).join('');
@@ -274,10 +276,10 @@ function wireHistPeriod(){
  const sel=$('#histMode');if(sel)sel.onchange=()=>{histMode=sel.value;render()};
  const p=$('#hpPrev'),n=$('#hpNext');if(p)p.onclick=()=>{histMonth.setMonth(histMonth.getMonth()-1);render()};if(n)n.onclick=()=>{histMonth.setMonth(histMonth.getMonth()+1);render()};
 }
-function swipe(w){const r=w.querySelector('.rw');let x0=0,dx=0,on=0;
- r.onpointerdown=e=>{x0=e.clientX;dx=0;on=1;r.style.transition='none';r.setPointerCapture(e.pointerId)};
- r.onpointermove=e=>{if(!on)return;dx=Math.min(0,e.clientX-x0);if(dx<-4)w.classList.add('sp');r.style.transform=`translateX(${dx}px)`};
- r.onpointerup=r.onpointercancel=()=>{on=0;r.style.transition='';if(dx<-90){r.style.transform='translateX(-110%)';setTimeout(()=>{S.tx=S.tx.filter(x=>String(x.id)!==w.dataset.id);save()},180)}else{r.style.transform='';setTimeout(()=>w.classList.remove('sp'),220)}}}
+function swipe(w){const r=w.querySelector('.rw');let x0=0,dx=0,on=0,mv=0;
+ r.onpointerdown=e=>{x0=e.clientX;dx=0;mv=0;on=1;r.style.transition='none';r.setPointerCapture(e.pointerId)};
+ r.onpointermove=e=>{if(!on)return;mv=Math.max(mv,Math.abs(e.clientX-x0));dx=Math.min(0,e.clientX-x0);if(dx<-4)w.classList.add('sp');r.style.transform=`translateX(${dx}px)`};
+ r.onpointerup=r.onpointercancel=u=>{on=0;r.style.transition='';if(u.type==='pointerup'&&mv<8){const x=S.tx.find(q=>String(q.id)===w.dataset.id);if(x)openSheet(x.t,x.a,x.c,x);return}if(dx<-90){r.style.transform='translateX(-110%)';setTimeout(()=>{S.tx=S.tx.filter(x=>String(x.id)!==w.dataset.id);save()},180)}else{r.style.transform='';setTimeout(()=>w.classList.remove('sp'),220)}}}
 const COL=['#0a84ff','#30d158','#ff9f0a','#bf5af2','#ff453a','#64d2ff','#ffd60a','#ac8e68'];
 function stat(){
  const {start,end}=periodBounds(statMode,statMonth);
@@ -296,19 +298,19 @@ function openOv(h){$('#sh').innerHTML='<div class="grab"></div>'+h;$('#ov').clas
 function closeOv(){$('#ov').classList.remove('on');sh=null}
 $('#ov').onclick=e=>{if(e.target.id==='ov')closeOv()};
 function ev(s){if(!/^[\d.+\-×÷ ]+$/.test(s))return NaN;try{return Math.round(Function('return '+s.replace(/×/g,'*').replace(/÷/g,'/'))()*100)/100}catch(e){return NaN}}
-function openSheet(t,a,c){sh={t,a,c,e:'',n:'',date:new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10)};const cat=t==='trf'?find('acc',c):find(t,c),chp=id=>S.acc.map(x=>`<button class="chip ${x.id===id?'on':''}" data-a="${x.id}">${x.i} ${esc(x.n)}</button>`).join('');
+function openSheet(t,a,c,tx){const d0=tx?new Date(tx.ts):new Date(),ds=d0.getFullYear()+'-'+String(d0.getMonth()+1).padStart(2,'0')+'-'+String(d0.getDate()).padStart(2,'0');sh={t,a,c,e:tx?String(tx.m):'',n:tx?(tx.n||''):'',id:tx&&tx.id,fresh:!!tx,date:ds,date0:ds};const cat=t==='trf'?find('acc',c):find(t,c),chp=id=>S.acc.map(x=>`<button class="chip ${x.id===id?'on':''}" data-a="${x.id}">${x.i} ${esc(x.n)}</button>`).join('');
  openOv(`${t==='trf'?'<div class="st" style="margin:0 0 6px">Откуда</div>':''}<div class="chips" id="chips">${chp(a)}</div>${t==='trf'?'<div class="st" style="margin:0 0 6px">Куда</div><div class="chips" id="chips2">'+chp(c)+'</div>':''}
- <div class="st" style="margin:0">${t==='trf'?'Перевод между счетами':(t==='exp'?'Расход':'Доход')+': '+cat.i+' '+esc(cat.n)}</div><div class="disp" id="disp">0</div>
+ <div class="st" style="margin:0">${sh.id?'Изменить · ':''}${t==='trf'?'Перевод между счетами':(t==='exp'?'Расход':'Доход')+': '+cat.i+' '+esc(cat.n)}</div><div class="disp" id="disp">0</div>
  <label class="date-label" for="txDate">Дата операции</label><input class="date-input" id="txDate" type="date" value="${sh.date}"><input class="note" id="note" placeholder="Комментарий (необязательно)" maxlength="80">
  <div class="pad">${['7','8','9','÷','4','5','6','×','1','2','3','−','.','0','⌫','+'].map(k=>`<button class="${'÷×−+'.includes(k)?'o':''}" data-k="${k}">${k}</button>`).join('')}</div>
- <button class="go" id="go">Готово</button>`);
+ <button class="go" id="go">${sh.id?'Сохранить':'Готово'}</button>`);
  $('#chips').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;sh.a=b.dataset.a;$('#chips').querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b))};
  if($('#chips2'))$('#chips2').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;sh.c=b.dataset.a;$('#chips2').querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b))};
- $('#note').oninput=e=>sh.n=e.target.value;$('#txDate').onchange=e=>sh.date=e.target.value;
- document.querySelectorAll('.pad button').forEach(b=>b.onclick=()=>{const k=b.dataset.k;sh.e=k==='⌫'?sh.e.slice(0,-1):sh.e+(k==='−'?'-':k);const v=ev(sh.e);$('#disp').innerHTML=(sh.e.replace(/-/g,'−')||'0')+(/[+\-×÷]/.test(sh.e.slice(1))&&!isNaN(v)?` <small>= ${v}</small>`:'')});
+ $('#note').value=sh.n;$('#disp').textContent=sh.e||'0';$('#note').oninput=e=>sh.n=e.target.value;$('#txDate').onchange=e=>sh.date=e.target.value;
+ document.querySelectorAll('.pad button').forEach(b=>b.onpointerdown=e=>{e.preventDefault();const k=b.dataset.k;if(sh.fresh){if(/[\d.]/.test(k))sh.e='';sh.fresh=false}sh.e=k==='⌫'?sh.e.slice(0,-1):sh.e+(k==='−'?'-':k);const v=ev(sh.e);$('#disp').innerHTML=(sh.e.replace(/-/g,'−')||'0')+(/[+\-×÷]/.test(sh.e.slice(1))&&!isNaN(v)?` <small>= ${v}</small>`:'')});
  $('#go').onclick=()=>{const v=ev(sh.e);if(!(v>0)){toast('Введите сумму');return}
   if(sh.t==='trf'&&sh.a===sh.c){toast('Выберите разные счета');return}
-  const parts=sh.date.split('-').map(Number),ts=new Date(parts[0],parts[1]-1,parts[2],12,0,0,0).getTime();S.tx.push({id:Date.now(),t:sh.t,a:sh.a,c:sh.c,m:v,n:sh.n.trim(),ts});closeOv();save();toast('Сохранено')}}
+  const parts=sh.date.split('-').map(Number),ts=new Date(parts[0],parts[1]-1,parts[2],12,0,0,0).getTime();if(sh.id){const x=S.tx.find(q=>q.id===sh.id);if(x){x.a=sh.a;if(sh.t==='trf')x.c=sh.c;x.m=v;x.n=sh.n.trim();if(sh.date!==sh.date0)x.ts=ts}}else S.tx.push({id:Date.now(),t:sh.t,a:sh.a,c:sh.c,m:v,n:sh.n.trim(),ts});closeOv();save();toast('Сохранено')}}
 function setg(){
  $('#v').innerHTML=`<h2>Резервная копия</h2><div class="card" style="padding:14px"><button class="btn" id="exp">Скачать данные (файл)</button><button class="btn g" id="imp">Загрузить данные из файла</button><input type="file" id="file" accept=".json,application/json" hidden><div class="st" id="stt"></div></div>
  ${sec('acc','Счета')}${sec('inc','Категории доходов')}${sec('exp','Категории расходов')}`;status();
