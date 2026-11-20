@@ -245,6 +245,117 @@ svg text{fill:#fff!important}svg polyline{stroke:#ff3d9a}svg circle[fill="#007af
 .acr .bl{font-size:16px;font-weight:700;white-space:nowrap;letter-spacing:0}
 .rub{font-size:.72em;font-weight:700;margin-left:.28em;color:#ffb3dc}
 input,select,textarea,.date-input{-webkit-user-select:text;user-select:text}
+/* ===== NEW YEAR THEME ===== */
+@keyframes snow{to{transform:translateY(240px)}}@keyframes twk{from{opacity:.55}to{opacity:1}}
+.themes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px}.tm{display:flex;flex-direction:column;gap:10px;align-items:flex-start;padding:8px;border-radius:16px;border:1.5px solid transparent;background:rgba(255,255,255,.08);color:#fff;font:700 12.5px -apple-system,sans-serif}.tm i{display:block;width:100%;height:46px;border-radius:12px}.tm.on{border-color:#fff;box-shadow:0 0 22px -4px rgba(255,255,255,.45)}
+html[data-theme=ny]{--acc:#e63946;--mut:#bfe3dc;--grn:#5ee6a8;--red:#ff7a7a;--c1:rgba(255,255,255,.07);--c2:rgba(255,255,255,.1)}
+html[data-theme=ny]{background:#06182a}
+html[data-theme=ny] body{background:radial-gradient(70% 38% at 85% 0%,rgba(230,57,70,.45),transparent 70%),radial-gradient(80% 42% at 0% 22%,rgba(255,209,102,.22),transparent 70%),radial-gradient(90% 45% at 50% 100%,rgba(14,107,92,.6),transparent 70%),linear-gradient(180deg,#06182a,#0b2a3c 55%,#07251f);background-attachment:fixed}
+html[data-theme=ny] body::before{left:0;top:-240px;width:100%;height:calc(100% + 240px);margin:0;border-radius:0;opacity:1;-webkit-mask-image:none;mask-image:none;background:radial-gradient(2.5px 2.5px at 10% 20%,#fff,transparent),radial-gradient(2px 2px at 40% 60%,rgba(255,255,255,.9),transparent),radial-gradient(3px 3px at 70% 30%,#fff,transparent),radial-gradient(2px 2px at 85% 80%,#fff,transparent),radial-gradient(1.5px 1.5px at 25% 85%,#fff,transparent),radial-gradient(2.5px 2.5px at 55% 10%,#fff,transparent);background-size:240px 240px;animation:snow 10s linear infinite}
+html[data-theme=ny] body::after{content:"";position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:28px;z-index:2;pointer-events:none;background:radial-gradient(circle at 15px 15px,#ff4d5a 0 4.5px,transparent 5.5px),radial-gradient(circle at 45px 19px,#ffd166 0 4.5px,transparent 5.5px),radial-gradient(circle at 75px 15px,#3ddc97 0 4.5px,transparent 5.5px),radial-gradient(circle at 105px 19px,#8fd3ff 0 4.5px,transparent 5.5px),linear-gradient(transparent 6px,rgba(255,255,255,.35) 6px 7px,transparent 7px);background-size:120px 28px;filter:drop-shadow(0 0 5px rgba(255,220,150,.8));animation:twk 1.8s ease-in-out infinite alternate}
+html[data-theme=ny] h2,html[data-theme=ny] .day,html[data-theme=ny] .actl{color:#ffd98a}
+html[data-theme=ny] .card{border-color:rgba(255,255,255,.18);box-shadow:0 22px 50px -24px rgba(14,107,92,.8),inset 0 1px 0 rgba(255,255,255,.12)}
+html[data-theme=ny] .hero2{background:linear-gradient(135deg,rgba(230,57,70,.52),rgba(255,209,102,.2) 65%,rgba(14,107,92,.38));border-color:rgba(255,225,160,.5);box-shadow:0 26px 60px -22px rgba(230,57,70,.75),inset 0 1px 0 rgba(255,255,255,.25)}
+html[data-theme=ny] .hero2 small,html[data-theme=ny] .hero2 .hint{color:#ffe3a3}
+html[data-theme=ny] .actot,html[data-theme=ny] .disp{text-shadow:0 0 26px rgba(255,209,102,.7),0 0 3px rgba(255,255,255,.5)}
+html[data-theme=ny] .big{text-shadow:none;filter:drop-shadow(0 0 14px rgba(255,209,102,.6))}
+html[data-theme=ny] main{padding-top:24px}
+html[data-theme=ny] .cur,html[data-theme=ny] .rub{color:#ffd166}
+html[data-theme=ny] .it small,html[data-theme=ny] .rw div.t small{color:#cdeee6}
+html[data-theme=ny] .ci{box-shadow:0 0 0 1.5px var(--g,#e63946),0 0 16px -2px var(--g,#e63946)}
+html[data-theme=ny] .it:nth-child(4n+2) .ci{--g:#ffd166}
+html[data-theme=ny] .it:nth-child(4n+3) .ci{--g:#3ddc97}
+html[data-theme=ny] .it:nth-child(4n) .ci{--g:#8fd3ff}
+html[data-theme=ny] .ci.hot,html[data-theme=ny] .it.tg .ci{box-shadow:0 0 0 3px #fff,0 0 30px 4px var(--g,#e63946)}
+html[data-theme=ny] .hh .m{background:rgba(230,57,70,.28);color:#ffb3b8}
+html[data-theme=ny] .hh .p{background:rgba(94,230,168,.2);color:#5ee6a8}
+html[data-theme=ny] .periodbar.home-periodbar button,html[data-theme=ny] .periodbar:not(.home-periodbar) button{color:#ffd98a}
+html[data-theme=ny] nav{background:rgba(8,28,40,.84);box-shadow:0 20px 40px -14px rgba(14,107,92,.8)}
+html[data-theme=ny] nav button{color:#bfe3dc}
+html[data-theme=ny] nav button.on{background:linear-gradient(135deg,#e63946,#f4a259);color:#fff;box-shadow:0 8px 20px -8px rgba(230,57,70,.9)}
+html[data-theme=ny] .sh{background:#0b2433;box-shadow:0 -20px 60px -10px rgba(14,107,92,.8)}
+html[data-theme=ny] .chip.on,html[data-theme=ny] .btn,html[data-theme=ny] .go{background:linear-gradient(135deg,#e63946,#f4a259);box-shadow:0 14px 28px -12px rgba(230,57,70,.9)}
+html[data-theme=ny] .chip,html[data-theme=ny] .er,html[data-theme=ny] .btn.g{background:rgba(255,255,255,.1);box-shadow:none}
+html[data-theme=ny] .btn.g{color:#ffd98a}
+html[data-theme=ny] .pad button.o{background:rgba(230,57,70,.25);color:#ffb3b8}
+html[data-theme=ny] .amt.p{color:#5ee6a8}
+html[data-theme=ny] .amt.tr{color:#ffd98a}
+html[data-theme=ny] svg polyline{stroke:#ffd166}
+html[data-theme=ny] svg circle[fill="#007aff"]{fill:#ffd166}
+html[data-theme=ny] .toast{background:rgba(230,57,70,.95)}
+html[data-theme=ny] #ov.glassov .sh{box-shadow:0 30px 80px -20px rgba(230,57,70,.6),inset 0 1px 0 rgba(255,255,255,.4)}
+@media (prefers-reduced-motion:reduce){html[data-theme=ny] body::before,html[data-theme=ny] body::after{animation:none}}
+/* ===== CLASSIC THEME ===== */
+html[data-theme=classic]{--acc:#3b5bff;--ink:#12142b;--tx:#12142b;--mut:#7b819c;--grn:#1f9d6b;--red:#e5484d;--c1:#fff;--c2:#eef0f8}
+html[data-theme=classic]{background:#f3f5fb;color:#12142b}
+html[data-theme=classic] body{color:#12142b;background:radial-gradient(70% 38% at 0% 0%,#dbe6ff,transparent 65%),radial-gradient(70% 36% at 100% 12%,#efe0ff,transparent 62%),radial-gradient(80% 40% at 50% 100%,#d9f4e9,transparent 66%),#f3f5fb;background-attachment:fixed}
+html[data-theme=classic] body::before{left:0;right:0;top:0;width:auto;height:env(safe-area-inset-top,0px);margin:0;border-radius:0;opacity:1;-webkit-mask-image:none;mask-image:none;background:linear-gradient(90deg,#1b2350,#3b3fd8);z-index:30}
+html[data-theme=classic] h2,html[data-theme=classic] .day,html[data-theme=classic] .actl{color:#8a90ab;letter-spacing:.14em}
+html[data-theme=classic] header h1{color:#12142b}
+html[data-theme=classic] .card{background:rgba(255,255,255,.8);border:1px solid #fff;box-shadow:0 18px 40px -22px rgba(30,40,110,.3),0 1px 3px rgba(30,40,110,.05)}
+html[data-theme=classic] .hero2{background:radial-gradient(120% 90% at 100% 0%,rgba(255,255,255,.22),transparent 55%),linear-gradient(135deg,#1b2350,#3b3fd8 62%,#6a4dff);border:none;box-shadow:0 28px 50px -22px rgba(59,63,216,.75)}
+html[data-theme=classic] .hero2 small{color:rgba(255,255,255,.72)}
+html[data-theme=classic] .hero2 .hint{color:rgba(255,255,255,.85)}
+html[data-theme=classic] .big{color:#fff;text-shadow:none}
+html[data-theme=classic] .actot,html[data-theme=classic] .disp{color:#12142b;text-shadow:none}
+html[data-theme=classic] .cur{color:#c9d4ff}
+html[data-theme=classic] .rub{color:#7b819c}
+html[data-theme=classic] .it b{color:#12142b}
+html[data-theme=classic] .it small,html[data-theme=classic] .rw div.t small{color:#7b819c}
+html[data-theme=classic] .row .it small{color:#12142b}
+html[data-theme=classic] .ci{background:#eef1fb!important;box-shadow:0 8px 16px -8px rgba(30,40,110,.35),inset 0 0 0 1px rgba(255,255,255,.8)}
+html[data-theme=classic] .ci.w{background:linear-gradient(145deg,#3b82ff,#6a4dff)!important}
+html[data-theme=classic] .ci.hot,html[data-theme=classic] .it.tg .ci{box-shadow:0 0 0 3px #3b5bff,0 0 24px rgba(59,91,255,.5)}
+html[data-theme=classic] .hh .m{background:rgba(229,72,77,.12);color:#d23b40}
+html[data-theme=classic] .hh .p{background:rgba(31,157,107,.14);color:#168a5c}
+html[data-theme=classic] .hh .g{background:rgba(59,91,255,.1);color:#3b5bff}
+html[data-theme=classic] .periodbar.home-periodbar button,html[data-theme=classic] .periodbar:not(.home-periodbar) button{background:#fff;color:#3b5bff;box-shadow:0 4px 12px -4px rgba(30,40,110,.3)}
+html[data-theme=classic] .periodbar strong,html[data-theme=classic] .periodbar select{color:#12142b}
+html[data-theme=classic] .periodbar select{background:#fff;color-scheme:light}
+html[data-theme=classic] nav{background:rgba(255,255,255,.84);border:1px solid #fff;box-shadow:0 20px 40px -14px rgba(30,40,110,.35)}
+html[data-theme=classic] nav button{color:#7b819c}
+html[data-theme=classic] nav button.on{background:rgba(59,91,255,.12);color:#3b5bff;box-shadow:none}
+html[data-theme=classic] .rw{background:#fff;box-shadow:0 10px 24px -16px rgba(30,40,110,.35)}
+html[data-theme=classic] .rw:active{background:#f4f5fb}
+html[data-theme=classic] .rw .ci{background:linear-gradient(145deg,#eef2ff,#f6ecff)!important;box-shadow:none}
+html[data-theme=classic] .amt.p{color:#1f9d6b}
+html[data-theme=classic] .amt.tr{color:#3b5bff}
+html[data-theme=classic] .sh{background:rgba(255,255,255,.97);border-top:none;box-shadow:0 -20px 60px -10px rgba(30,40,110,.3)}
+html[data-theme=classic] .grab{background:#d5d8e6}
+html[data-theme=classic] .ov{background:rgba(18,20,43,.32)}
+html[data-theme=classic] .chip,html[data-theme=classic] .er,html[data-theme=classic] .btn.g{background:#eef0f8;color:#12142b;box-shadow:none}
+html[data-theme=classic] .btn.g{color:#3b5bff}
+html[data-theme=classic] .chip.on,html[data-theme=classic] .btn,html[data-theme=classic] .go{background:linear-gradient(135deg,#3b82ff,#6a4dff);color:#fff;box-shadow:0 14px 28px -12px rgba(80,90,255,.8)}
+html[data-theme=classic] .note,html[data-theme=classic] .inp,html[data-theme=classic] .date-input,html[data-theme=classic] input[type=date]{background:#eef0f8;color:#12142b;color-scheme:light}
+html[data-theme=classic] .note::placeholder,html[data-theme=classic] .inp::placeholder{color:#9aa0bb}
+html[data-theme=classic] .pad button{background:#fff;color:#12142b;box-shadow:0 6px 14px -8px rgba(30,40,110,.35),inset 0 0 0 1px rgba(30,40,110,.05)}
+html[data-theme=classic] .pad button:active{background:#eef0f8}
+html[data-theme=classic] .pad button.o{background:rgba(59,91,255,.1);color:#3b5bff;box-shadow:none}
+html[data-theme=classic] svg text{fill:#12142b!important}
+html[data-theme=classic] svg polyline{stroke:#3b5bff}
+html[data-theme=classic] svg circle[fill="#007aff"]{fill:#3b5bff}
+html[data-theme=classic] .toast{background:#12142b;color:#fff}
+html[data-theme=classic] #ov.glassov{background:rgba(30,40,110,.2)}
+html[data-theme=classic] #ov.glassov .sh{background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(255,255,255,.6));border:1px solid #fff;box-shadow:0 30px 80px -20px rgba(30,40,110,.4)}
+html[data-theme=classic] .acr{background:rgba(255,255,255,.75);border-color:#fff}
+html[data-theme=classic] .acr .nm,html[data-theme=classic] .acr .bl{color:#12142b}
+html[data-theme=classic] .tm{background:#eef0f8;color:#12142b}
+html[data-theme=classic] .tm.on{border-color:#3b5bff;box-shadow:none}
+html[data-theme=classic] .it:nth-child(8n+1) .ci{background:#e3eeff!important}
+html[data-theme=classic] .it:nth-child(8n+2) .ci{background:#dff7e6!important}
+html[data-theme=classic] .it:nth-child(8n+3) .ci{background:#ffeed8!important}
+html[data-theme=classic] .it:nth-child(8n+4) .ci{background:#f0e4ff!important}
+html[data-theme=classic] .it:nth-child(8n+5) .ci{background:#ffe3e0!important}
+html[data-theme=classic] .it:nth-child(8n+6) .ci{background:#dcf5ff!important}
+html[data-theme=classic] .it:nth-child(8n+7) .ci{background:#fff5cc!important}
+html[data-theme=classic] .it:nth-child(8n+8) .ci{background:#f1e7dc!important}
+.tm i.swny{display:flex;align-items:center;justify-content:center;font-size:25px;font-style:normal;background:radial-gradient(circle at 16% 26%,#fff 0 1.6px,transparent 2.4px),radial-gradient(circle at 80% 20%,#fff 0 1.3px,transparent 2.1px),radial-gradient(circle at 64% 80%,#fff 0 1.5px,transparent 2.3px),radial-gradient(circle at 28% 78%,#fff 0 1px,transparent 1.8px),radial-gradient(circle at 90% 70%,#ffd166 0 1.6px,transparent 2.4px),linear-gradient(150deg,#0a2236,#0e6b5c 60%,#b4232f)}
+html[data-theme=ny] .tm.on{border-color:#ffd166;box-shadow:0 0 22px -4px rgba(255,209,102,.6)}
+@keyframes aur{0%{transform:translate3d(-3%,-2%,0) rotate(0deg) scale(1)}50%{transform:translate3d(4%,3%,0) rotate(9deg) scale(1.14)}100%{transform:translate3d(-2%,5%,0) rotate(-7deg) scale(1.06)}}
+@keyframes flt{0%{transform:translate3d(0,-16px,0)}100%{transform:translate3d(8px,22px,0)}}
+html[data-theme=classic] body::after{content:"";position:fixed;inset:-25%;pointer-events:none;will-change:transform;background:radial-gradient(38% 30% at 25% 28%,rgba(80,130,255,.42),transparent 70%),radial-gradient(34% 28% at 78% 22%,rgba(170,110,255,.36),transparent 70%),radial-gradient(40% 32% at 70% 78%,rgba(70,220,180,.32),transparent 70%),radial-gradient(30% 26% at 20% 80%,rgba(255,150,190,.28),transparent 70%);animation:aur 26s ease-in-out infinite alternate}
+html[data-theme=classic] #app::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;will-change:transform;background:radial-gradient(circle at 12% 22%,transparent 0 46px,rgba(59,91,255,.2) 47px 48.5px,transparent 49.5px),radial-gradient(circle at 90% 38%,transparent 0 70px,rgba(130,90,255,.18) 71px 72.5px,transparent 73.5px),radial-gradient(circle at 20% 72%,transparent 0 30px,rgba(40,190,150,.22) 31px 32.5px,transparent 33.5px),radial-gradient(circle at 84% 84%,transparent 0 54px,rgba(59,91,255,.16) 55px 56.5px,transparent 57.5px),radial-gradient(circle at 62% 12%,rgba(59,91,255,.4) 0 3px,transparent 4px),radial-gradient(circle at 8% 52%,rgba(130,90,255,.4) 0 2.5px,transparent 3.5px),radial-gradient(circle at 74% 58%,rgba(40,190,150,.45) 0 3px,transparent 4px);animation:flt 15s ease-in-out infinite alternate}
+@media (prefers-reduced-motion:reduce){html[data-theme=classic] body::after,html[data-theme=classic] #app::before{animation:none}}
 </style></head><body>
 <div id="app">
 <header><h1 id="ttl">Главная</h1></header>
@@ -291,20 +402,22 @@ function render(){document.querySelector('header').classList.toggle('abs',tab===
 function openAccounts(){const C=['#ff3d9a','#ff8a3d','#2ef2c2','#b46bff'],tot=S.acc.reduce((r,a)=>r+bal(a),0);
  openOv(`<div class="actl">Мои счета</div><div class="actot">${f(tot)}<span class="rub">₸</span></div>`+S.acc.map((a,i)=>`<div class="acr"><div class="ci" style="--g:${C[i%4]}">${a.i}</div><div class="nm">${esc(a.n)}</div><div class="bl">${f(bal(a))}<span class="rub">₸</span></div></div>`).join(''));
  $('#ov').classList.add('glassov')}
+function applyTheme(){const t=S.cfg.theme||'gta';document.documentElement.dataset.theme=t;const m=document.querySelector('meta[name=theme-color]');if(m)m.content=t==='ny'?'#06182a':t==='classic'?'#1b2350':'#14042a'}
 let spinNext=true;
 function reels(str,spin){let k=0;
  return str.split('').map(ch=>{
   if(ch.trim()==='')return '<span class="sp"></span>';
   if(!/\d/.test(ch))return `<span class="sg">${ch}</span>`;
-  const d=+ch,i=k++,up=i%2===0,to=up?20+d:10+d,from=up?0:29;
-  return `<span class="dg"><span class="rl" style="--from:${from};--to:${to};${spin?`animation:spin ${(1.1+i*.13).toFixed(2)}s cubic-bezier(.2,.85,.25,1.05) ${(.35+i*.1).toFixed(2)}s both`:`transform:translateY(calc(${to}*-1em))`}">${Array.from({length:30},(_,n)=>`<i>${n%10}</i>`).join('')}</span></span>`}).join('')}
+  const d=+ch,i=k++,up=i%2===0,to=up?20+d:10+d,from=up?0:30;
+  return `<span class="dg"><span class="rl" style="--from:${from};--to:${to};${spin?`animation:spin ${(1.1+i*.13).toFixed(2)}s cubic-bezier(.2,.85,.25,1.05) ${(.2+i*.1).toFixed(2)}s both`:`transform:translateY(calc(${to}*-1em))`}">${Array.from({length:40},(_,n)=>`<i>${n%10}</i>`).join('')}</span></span>`}).join('')}
 function home(){
  const {start:ms,end:me}=monthBounds(homeMonth),sm=t=>S.tx.filter(x=>x.t===t&&x.ts>=ms&&x.ts<me).reduce((r,x)=>r+x.m,0),tot=S.acc.reduce((r,a)=>r+bal(a),0),tn=i=>`style="background:${COL[i%8]}33"`;
  const txt=f(tot).replace('-','−'),nd=(txt.match(/\d/g)||[]).length,sp=(txt.match(/\s/g)||[]).length,fs=Math.max(30,Math.min(56,Math.floor(300/(nd*.64+sp*.3+.8)))),
   spin=spinNext;spinNext=false;
  $('#v').innerHTML=`<div class="hero2"><small>Всего на счетах</small><span class="hint">Счета ›</span><div class="big" style="font-size:${fs}px" aria-label="${txt} ₸">${reels(txt,spin)}<span class="cur">₸</span></div></div>
  <div class="periodbar home-periodbar"><button id="hmPrev" aria-label="Предыдущий месяц">‹</button><strong>${monthName(homeMonth)}</strong><button id="hmNext" aria-label="Следующий месяц">›</button></div>
- <h2 class="hh"><span class="rh ${reorder==='exp'?'ron':''}" data-g="exp">Расходы${reorder==='exp'?' <em>Готово</em>':''}</span><span class="m">${f(sm('exp'))}</span></h2><div class="card grid" data-grp="exp">${S.exp.map((c,i)=>`<div class="it" data-cat="${c.id}" data-t="exp"><div class="ci" ${tn(i+3)}>${c.i}</div><b>${esc(c.n)}</b><small>${f(S.tx.filter(x=>x.t==='exp'&&x.c===c.id&&x.ts>=ms&&x.ts<me).reduce((r,x)=>r+x.m,0))}</small></div>`).join('')}</div>`;
+ <h2 class="hh"><span class="rh ${reorder==='exp'?'ron':''}" data-g="exp">Расходы${reorder==='exp'?' <em>Готово</em>':''}</span><span class="m">${f(sm('exp'))}</span></h2><div class="card grid" data-grp="exp">${S.exp.map((c,i)=>`<div class="it" data-cat="${c.id}" data-t="exp"><div class="ci" ${tn(i+3)}>${c.i}</div><b>${esc(c.n)}</b><small>${f(S.tx.filter(x=>x.t==='exp'&&x.c===c.id&&x.ts>=ms&&x.ts<me).reduce((r,x)=>r+x.m,0))}</small></div>`).join('')}</div>
+ <h2 class="hh"><span class="rh ${reorder==='inc'?'ron':''}" data-g="inc">Доходы${reorder==='inc'?' <em>Готово</em>':''}</span><span class="p">${f(sm('inc'))}</span></h2><div class="card grid" data-grp="inc">${S.inc.map((c,i)=>`<div class="it" data-cat="${c.id}" data-t="inc"><div class="ci" ${tn(i)}>${c.i}</div><b>${esc(c.n)}</b><small>${f(S.tx.filter(x=>x.t==='inc'&&x.c===c.id&&x.ts>=ms&&x.ts<me).reduce((r,x)=>r+x.m,0))}</small></div>`).join('')}</div>`;
  $('#hmPrev').onclick=()=>{homeMonth.setMonth(homeMonth.getMonth()-1);render()};
  $('#hmNext').onclick=()=>{homeMonth.setMonth(homeMonth.getMonth()+1);render()};
  document.querySelectorAll('[data-cat]').forEach(e=>{if(reorder===e.dataset.t)return;e.onclick=()=>openSheet(e.dataset.t,S.acc[0].id,e.dataset.cat)});
@@ -384,8 +497,10 @@ function openSheet(t,a,c,tx){const d0=tx?new Date(tx.ts):new Date(),ds=d0.getFul
   if(sh.t==='trf'&&sh.a===sh.c){toast('Выберите разные счета');return}
   sh.date=$('#txDate').value||sh.date;const parts=sh.date.split('-').map(Number),ts=new Date(parts[0],parts[1]-1,parts[2],12,0,0,0).getTime();if(sh.id){const x=S.tx.find(q=>q.id===sh.id);if(x){x.a=sh.a;if(sh.t==='trf')x.c=sh.c;x.m=v;x.n=sh.n.trim();if(sh.date!==sh.date0)x.ts=ts}}else S.tx.push({id:Date.now(),t:sh.t,a:sh.a,c:sh.c,m:v,n:sh.n.trim(),ts});closeOv();save();toast('Сохранено')}}
 function setg(){
+ const th=S.cfg.theme||'gta';
  $('#v').innerHTML=`<h2>Резервная копия</h2><div class="card" style="padding:14px"><button class="btn" id="exp">Скачать данные (файл)</button><button class="btn g" id="imp">Загрузить данные из файла</button><input type="file" id="file" accept=".json,application/json" hidden><div class="st" id="stt"></div></div>
- ${sec('acc','Счета')}${sec('inc','Категории доходов')}${sec('exp','Категории расходов')}`;status();
+ ${sec('acc','Счета')}${sec('inc','Категории доходов')}${sec('exp','Категории расходов')}<h2>Тема оформления</h2><div class="card themes"><button class="tm ${th==='classic'?'on':''}" data-th="classic"><i style="background:linear-gradient(135deg,#dbe6ff,#3b82ff 55%,#6a4dff)"></i>Классика</button><button class="tm ${th==='gta'?'on':''}" data-th="gta"><i style="background:linear-gradient(135deg,#ff3d9a,#ff8a3d 55%,#6a1b9a)"></i>Vice City</button><button class="tm ${th==='ny'?'on':''}" data-th="ny"><i class="swny">🎄</i>❄ Новый год</button></div>`;status();
+ document.querySelectorAll('[data-th]').forEach(b=>b.onclick=()=>{S.cfg.theme=b.dataset.th;persist();applyTheme();setg()});
  $('#exp').onclick=exportData;$('#imp').onclick=()=>$('#file').click();$('#file').onchange=importData;
  document.querySelectorAll('[data-e]').forEach(e=>e.onclick=()=>{const[t,i]=e.dataset.e.split(':');openEdit(t,i)});
  document.querySelectorAll('[data-add]').forEach(e=>e.onclick=()=>{openEdit(e.dataset.add)})}
@@ -422,7 +537,7 @@ document.querySelectorAll('nav button[data-t]').forEach(b=>b.onclick=()=>{tab=b.
 try{const m={name:'Бюджет',short_name:'Бюджет',display:'standalone',background_color:'#000000',theme_color:'#000000',start_url:location.pathname,lang:'ru',icons:[{src:new URL('icon-512.png',location.href).href,sizes:'512x512',type:'image/png'},{src:new URL('icon-180.png',location.href).href,sizes:'180x180',type:'image/png'}]};
  const l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/manifest+json'}));document.head.appendChild(l)}catch(e){}
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
-render();
+applyTheme();render();
 window.addEventListener('pageshow',e=>{if(e.persisted&&tab==='home'){spinNext=true;render()}});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&tab==='home'&&!$('#ov').classList.contains('on')){spinNext=true;render()}});
 </script></body></html>
