@@ -39,7 +39,6 @@ nav button.on{background:rgba(76,141,255,.18);color:#8db4ff;box-shadow:none}
 .card{margin-bottom:12px;padding:14px 6px;border-radius:24px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);box-shadow:0 18px 40px -24px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.05);-webkit-backdrop-filter:blur(22px) saturate(140%);backdrop-filter:blur(22px) saturate(140%);animation:rise .55s cubic-bezier(.2,.9,.25,1) both}
 .card+h2+.card{animation-delay:.06s}
 @keyframes rise{from{opacity:0;transform:translateY(16px) scale(.985)}}
-@keyframes spin{from{transform:translateY(calc(var(--from)*-1em))}to{transform:translateY(calc(var(--to)*-1em))}}
 @keyframes up{from{transform:translateY(100%)}}
 @keyframes pop{from{opacity:0;transform:scale(.88) translateY(14px)}}
 h2,.day{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#7e86a3;font-weight:800;margin:24px 10px 10px}
@@ -96,11 +95,6 @@ input{-webkit-user-select:text;user-select:text}
 .hero2 small{font-size:12px;text-transform:uppercase;color:rgba(255,255,255,.65);letter-spacing:.22em;font-weight:800}
 .hero2 .hint{position:absolute;top:20px;right:22px;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.8)}
 .big{display:flex;align-items:flex-end;margin-top:12px;letter-spacing:-.02em;line-height:1;white-space:nowrap;color:#fff;font-weight:900;text-shadow:none}
-.dg{display:inline-block;width:.64em;height:1em;overflow:hidden;text-align:center;-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent)}
-.rl{display:flex;flex-direction:column;will-change:transform}
-.rl i{display:block;font-style:normal;height:1em;line-height:1em}
-.big .sp{display:inline-block;width:.3em}
-.sg{display:inline-block;line-height:1em}
 .cur{font-size:.42em;font-weight:700;margin:0 0 .18em .3em;color:#9db8ff}
 #ov.glassov{align-items:center;justify-content:center;padding:22px;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
 #ov.glassov .sh{width:100%;max-width:360px;max-height:80%;border-radius:34px;padding:22px 18px 18px;background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.05));-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.16);box-shadow:0 30px 80px -20px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.4);animation:pop .35s cubic-bezier(.2,.9,.3,1.15) both}
@@ -276,6 +270,7 @@ html[data-theme=light] .tx-go{background:linear-gradient(135deg,#21a038,#188b30)
 html[data-theme] .it.add .ci{background:transparent!important;box-shadow:none!important;border:2px dashed color-mix(in srgb,currentColor 38%,transparent);font-size:26px;font-weight:300}
 .it.add .ci::after{display:none}
 .it.add b{opacity:.7}
+.big .num{font-variant-numeric:tabular-nums}
 </style></head><body>
 <div id="app">
 <header><h1 id="ttl">Главная</h1></header>
@@ -380,15 +375,14 @@ function openAccounts(){
  });
 }
 
-function reels(str,spin,prev){
- let k=0;const dg=str.replace(/\D/g,''),pd=(prev||'').replace(/\D/g,'');
- return str.split('').map(ch=>{
-  if(ch.trim()==='')return '<span class="sp"></span>';
-  if(!/\d/.test(ch))return `<span class="sg">${ch}</span>`;
-  const d=+ch,i=k++,up=i%2===0,p=+(pd[pd.length-dg.length+i]||0),to=up?20+d:10+d,from=up?p:30+p;
-  const anim=spin?`animation:spin ${(1.1+i*.13).toFixed(2)}s cubic-bezier(.2,.85,.25,1.05) ${((prev?.04:.2)+i*.1).toFixed(2)}s both`:`transform:translateY(calc(${to}*-1em))`;
-  return `<span class="dg"><span class="rl" style="--from:${from};--to:${to};${anim}">${Array.from({length:40},(_,n)=>`<i>${n%10}</i>`).join('')}</span></span>`;
- }).join('');
+let cntRaf=0;
+function countTo(el,from,to,ms){
+ cancelAnimationFrame(cntRaf);
+ const fmt=v=>f(Math.round(v)).replace('-','−'),t0=performance.now();
+ el.textContent=fmt(from);
+ const step=t=>{const k=Math.min(1,(t-t0)/ms),e=1-Math.pow(1-k,4);el.textContent=fmt(from+(to-from)*e);
+  if(k<1)cntRaf=requestAnimationFrame(step);else el.textContent=fmt(to)};
+ cntRaf=requestAnimationFrame(step);
 }
 
 function home(){
@@ -397,14 +391,16 @@ function home(){
  const sum=(t,c)=>monthTx.filter(x=>x.t===t&&(!c||x.c===c)).reduce((r,x)=>r+x.m,0);
  const grid=t=>S[t].map(c=>`<div class="it" data-cat="${c.id}" data-t="${t}"><div class="ci">${c.i}</div><b>${esc(c.n)}</b><small>${f(sum(t,c.id))}</small></div>`).join('');
  const prevFrom=spinFrom;spinFrom=null;
- const txt=f(totalBal()).replace('-','−'),nd=(txt.match(/\d/g)||[]).length,sp=(txt.match(/\s/g)||[]).length;
- const fs=Math.max(30,Math.min(56,Math.floor(300/(nd*.64+sp*.3+.8)))),spin=spinNext;spinNext=false;
+ const tot=totalBal(),txt=f(tot).replace('-','−'),nd=(txt.match(/\d/g)||[]).length,sp=(txt.match(/\s/g)||[]).length;
+ const fs=Math.max(30,Math.min(56,Math.floor(300/(nd*.64+sp*.3+.8)))),run=spinNext;spinNext=false;
+ const from=prevFrom!=null?prevFrom:0;
  $('#v').innerHTML=`
-  <div class="hero2"><small>Всего на счетах</small><span class="hint">Счета ›</span><div class="big" style="font-size:${fs}px" aria-label="${txt} ₸">${reels(txt,spin,prevFrom)}<span class="cur">₸</span></div></div>
+  <div class="hero2"><small>Всего на счетах</small><span class="hint">Счета ›</span><div class="big" style="font-size:${fs}px" aria-label="${txt} ₸"><span class="num">${txt}</span><span class="cur">₸</span></div></div>
   <h2 class="hh"><span>Расходы</span><span class="m">${f(sum('exp'))}</span></h2><div class="card grid">${grid('exp')}</div>
   <h2 class="hh"><span>Доходы</span><span class="p">${f(sum('inc'))}</span></h2><div class="card grid">${grid('inc')}</div>`;
  document.querySelectorAll('[data-cat]').forEach(e=>e.onclick=()=>openSheet(e.dataset.t,S.acc[0].id,e.dataset.cat));
  $('.hero2').onclick=openAccounts;
+ if(run&&from!==tot)countTo($('.big .num'),from,tot,prevFrom!=null?1000:1300);
 }
 
 function hist(){
@@ -518,10 +514,10 @@ function openSheet(t,a,c,tx){
   if(!(v>0)){toast('Введите сумму');return}
   if(sh.t==='trf'&&sh.a===sh.c){toast('Выберите разные счета');return}
   sh.date=$('#txDate').value||sh.date;
-  const [y,m,d]=sh.date.split('-').map(Number),ts=new Date(y,m-1,d,12).getTime(),oldTxt=f(totalBal()).replace('-','−');
+  const [y,m,d]=sh.date.split('-').map(Number),ts=new Date(y,m-1,d,12).getTime(),oldTot=totalBal();
   if(sh.id){const x=S.tx.find(q=>q.id===sh.id);if(x){x.a=sh.a;if(sh.t==='trf')x.c=sh.c;x.m=v;x.n=sh.n.trim();if(sh.date!==sh.date0)x.ts=ts}}
   else S.tx.push({id:Date.now(),t:sh.t,a:sh.a,c:sh.c,m:v,n:sh.n.trim(),ts});
-  if(sh.t!=='trf'&&tab==='home'){spinFrom=oldTxt;spinNext=true}
+  if(sh.t!=='trf'&&tab==='home'){spinFrom=oldTot;spinNext=true}
   closeOv();save();toast('Сохранено');
  };
 }
